@@ -1,4 +1,4 @@
-import { GeneralOutput } from "../styles/Output.styled";
+/*import { GeneralOutput } from "../styles/Output.styled"; */
 
 const Skills = () => {
     return (
