@@ -22,7 +22,7 @@ const History: React.FC = () => {
           style={{
             cursor: 'pointer',
             textDecoration: 'underline',
-            color: 'inherit'
+            color: '#00ff41'
           }}
         >
           {cmd}

@@ -8,14 +8,17 @@ const About: React.FC = () => {
   return (
     <AboutWrapper data-testid="about">
       <p>
-        Hi, my name is <HighlightSpan>Jihed Kdiss</HighlightSpan>.
+        Hi, my name is <HighlightSpan>Manoj Kumar N</HighlightSpan>.
       </p>
       <p>
-        I'm a <HighlightAlt>Junior Cyber Security Analyst</HighlightAlt> based in Tunisia.
+        I'm a <HighlightAlt>Cybersecurity Engineer | Ethical Hacker</HighlightAlt> based in Bangalore, India.
       </p>
       <p>
-        I am passionate about reverse engineering and <br />
-        penetration testing. I also enjoy coding and playing CTFs.
+        Proactive MCA graduate with published IEEE research on DoS-resilient wireless networks using Deep Reinforcement Learning.<br />
+        Certified Ethical Hacker passionate about penetration testing, vulnerability assessment, and building resilient systems.
+      </p>
+      <p>
+        Type <strong>help</strong> to see all commands.
       </p>
     </AboutWrapper>
   );

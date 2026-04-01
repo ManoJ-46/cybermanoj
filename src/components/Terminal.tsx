@@ -27,29 +27,22 @@ type Command = {
 }[];
 
 export const commands: Command = [
-  { cmd: "about", desc: "about Jihed Kdiss", tab: 8 },
+  { cmd: "about", desc: "about Manoj Kumar N", tab: 8 },
   { cmd: "clear", desc: "clear the terminal", tab: 8 },
-  { cmd: "echo", desc: "print out anything", tab: 9 },
-  { cmd: "education", desc: "my education background", tab: 4 },
-  { cmd: "email", desc: "send me an email", tab: 8 },
-  { cmd: "resume", desc: "go to my resume", tab: 7 },
-  { cmd: "help", desc: "check available commands", tab: 9 },
+  { cmd: "projects", desc: "view my cybersecurity projects", tab: 5 },
+  { cmd: "skills", desc: "list my technical skills", tab: 7 },
+  { cmd: "experience", desc: "my work experience", tab: 4 },
+  { cmd: "certifications", desc: "view my certifications", tab: 4 },
+  { cmd: "resume", desc: "download my resume", tab: 7 },
+  { cmd: "socials", desc: "check my social links", tab: 6 },
+  { cmd: "help", desc: "show all available commands", tab: 9 },
   { cmd: "history", desc: "view command history", tab: 6 },
-  { cmd: "projects", desc: "view projects that I've coded", tab: 5 },
-  { cmd: "pwd", desc: "print current working directory", tab: 10 },
-  { cmd: "socials", desc: "check out my social accounts", tab: 6 },
-
-  { cmd: "welcome", desc: "display hero section", tab: 6 },
+  { cmd: "email", desc: "send me an email", tab: 8 },
   { cmd: "whoami", desc: "about current user", tab: 7 },
+  { cmd: "welcome", desc: "display welcome message", tab: 6 },
 ];
 
-// Hidden easter-egg commands (not listed in help)
-export const hiddenCommands = [
-  "sudo",
-  "neofetch",
-  "uname",
-  "ls",
-];
+export const hiddenCommands = ["sudo", "neofetch", "uname", "ls"];
 
 type Term = {
   arg: string[];
@@ -72,20 +65,15 @@ const Terminal = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [inputVal, setInputVal] = useState("");
-  // Start with 'welcome' so it executes first on load
   const [cmdHistory, setCmdHistory] = useState<string[]>(["welcome", "about"]);
   const [rerender, setRerender] = useState(false);
   const [hints, setHints] = useState<string[]>([]);
-  // History navigation index: null means not navigating; otherwise index into cmdHistory (oldest -> newest)
   const [histIndex, setHistIndex] = useState<number | null>(null);
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setRerender(false);
-      setInputVal(e.target.value);
-    },
-    [inputVal]
-  );
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setRerender(false);
+    setInputVal(e.target.value);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -108,80 +96,57 @@ const Terminal = () => {
     setHistIndex(null);
   };
 
-  // focus on input when terminal is clicked
   const handleDivClick = () => {
     inputRef.current && inputRef.current.focus();
   };
+
   useEffect(() => {
     document.addEventListener("click", handleDivClick);
-    return () => {
-      document.removeEventListener("click", handleDivClick);
-    };
-  }, [containerRef]);
+    return () => document.removeEventListener("click", handleDivClick);
+  }, []);
 
-  // Keyboard Press
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     setRerender(false);
     const ctrlI = e.ctrlKey && e.key.toLowerCase() === "i";
     const ctrlL = e.ctrlKey && e.key.toLowerCase() === "l";
 
-    // if Tab or Ctrl + I
     if (e.key === "Tab" || ctrlI) {
       e.preventDefault();
       if (!inputVal) return;
 
       let hintsCmds: string[] = [];
       commands.forEach(({ cmd }) => {
-        if (_.startsWith(cmd, inputVal)) {
-          hintsCmds = [...hintsCmds, cmd];
-        }
+        if (_.startsWith(cmd, inputVal)) hintsCmds = [...hintsCmds, cmd];
       });
 
       const returnedHints = argTab(inputVal, setInputVal, setHints, hintsCmds);
       hintsCmds = returnedHints ? [...hintsCmds, ...returnedHints] : hintsCmds;
 
-      // if there are many command to autocomplete
-      if (hintsCmds.length > 1) {
-        setHints(hintsCmds);
-      }
-      // if only one command to autocomplete
+      if (hintsCmds.length > 1) setHints(hintsCmds);
       else if (hintsCmds.length === 1) {
         const currentCmd = _.split(inputVal, " ");
-        setInputVal(
-          currentCmd.length !== 1
-            ? `${currentCmd[0]} ${currentCmd[1]} ${hintsCmds[0]}`
-            : hintsCmds[0]
-        );
-
+        setInputVal(currentCmd.length !== 1 ? `${currentCmd[0]} ${currentCmd[1]} ${hintsCmds[0]}` : hintsCmds[0]);
         setHints([]);
       }
     }
 
-    // if Ctrl + L
-    if (ctrlL) {
-      clearHistory();
-    }
+    if (ctrlL) clearHistory();
 
-    // Go previous cmd
     if (e.key === "ArrowUp") {
       if (cmdHistory.length === 0) return;
-
       const nextIndex = histIndex === null ? cmdHistory.length - 1 : Math.max(0, histIndex - 1);
       setHistIndex(nextIndex);
       setInputVal(cmdHistory[nextIndex]);
       inputRef?.current?.blur();
     }
 
-    // Go next cmd
     if (e.key === "ArrowDown") {
       if (histIndex === null) return;
-
       if (histIndex === cmdHistory.length - 1) {
         setInputVal("");
         setHistIndex(null);
         return;
       }
-
       const nextIndex = Math.min(cmdHistory.length - 1, histIndex + 1);
       setHistIndex(nextIndex);
       setInputVal(cmdHistory[nextIndex]);
@@ -189,20 +154,14 @@ const Terminal = () => {
     }
   };
 
-  // For caret position at the end
   useEffect(() => {
-    const timer = setTimeout(() => {
-      inputRef?.current?.focus();
-    }, 1);
+    const timer = setTimeout(() => inputRef?.current?.focus(), 1);
     return () => clearTimeout(timer);
-  }, [inputRef, inputVal, histIndex]);
+  }, [inputVal, histIndex]);
 
-  // Auto-scroll to bottom when history updates or new output renders
   useEffect(() => {
-    const el = containerRef?.current as unknown as HTMLElement | null;
-    if (el) {
-      el.scrollTop = el.scrollHeight;
-    }
+    const el = containerRef?.current as HTMLElement | null;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [cmdHistory, rerender]);
 
   return (
@@ -243,9 +202,7 @@ const Terminal = () => {
 
       {hints.length > 1 && (
         <div>
-          {hints.map(hCmd => (
-            <Hints key={hCmd}>{hCmd}</Hints>
-          ))}
+          {hints.map(hCmd => <Hints key={hCmd}>{hCmd}</Hints>)}
         </div>
       )}
 

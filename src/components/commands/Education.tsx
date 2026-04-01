@@ -17,12 +17,12 @@ const Education: React.FC = () => {
 
 const eduBg = [
   {
-    title: "Software Engineering Degree",
-    desc: "National Institute of Applied Science and Technology | 2023 - 2028",
+    title: "Master of Computer Applications (MCA)",
+    desc: "JSS Academy of Technical Education | CGPA 8.85 | Feb 2024 – Oct 2025 | Bangalore",
   },
   {
-    title: "High School Diploma",
-    desc: "Pioneer High School of Medenine | 2023",
+    title: "Bachelor of Computer Applications (BCA)",
+    desc: "Vivekananda Institute of Management | CGPA 7.84 | Aug 2020 – Aug 2023 | Bangalore",
   },
 ];
 

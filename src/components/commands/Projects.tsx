@@ -16,10 +16,8 @@ import Usage from "../Usage";
 const Projects: React.FC = () => {
   const { arg, history, rerender, executeCommand } = useContext(termContext);
 
-  /* ===== get current command ===== */
   const currentCommand = getCurrentCmdArry(history);
 
-  /* ===== check current command is redirect ===== */
   useEffect(() => {
     if (checkRedirect(rerender, currentCommand, "projects")) {
       projects.forEach(({ id, url }) => {
@@ -28,12 +26,10 @@ const Projects: React.FC = () => {
     }
   }, [arg, rerender, currentCommand]);
 
-  /* ===== handle project click ===== */
   const handleProjectClick = (id: number, url: string) => {
     window.open(url, "_blank");
   };
 
-  /* ===== check arg is valid ===== */
   const checkArg = () =>
     isArgInvalid(arg, "go", ["1", "2", "3", "4"]) ? (
       <Usage cmd="projects" />
@@ -44,8 +40,8 @@ const Projects: React.FC = () => {
   ) : (
     <div data-testid="projects">
       <ProjectsIntro>
-        “Talk is cheap. Show me the code”? I got you! <br />
-        Here are some of my projects you shouldn't miss
+        Here are my key cybersecurity projects<br />
+        (Type <strong>projects go 1</strong> to open any project)
       </ProjectsIntro>
       {projects.map(({ id, title, desc, url }) => (
         <ProjectContainer key={id}>
@@ -66,27 +62,27 @@ const Projects: React.FC = () => {
 const projects = [
   {
     id: 1,
-    title: "Blog",
-    desc: "My personal blog where I write down my thoughts and experiences.",
-    url: "https://blog.jihedkdiss.tn/",
+    title: "Radio Resource Allocation Under DoS Attacks using DRL",
+    desc: "IEEE Published Paper • Hybrid DDPG model for wireless DoS mitigation (60-80% faster training)",
+    url: "https://github.com/ManoJ-46", // change if you have public repo
   },
   {
     id: 2,
-    title: "Radio Medenine Website",
-    desc: "Wordpress website developed for Radio Medenine. A local radio station in Medenine, Tunisia.",
-    url: "https://radiomednine.com/",
+    title: "Custom Kali Vulnerability Scanner",
+    desc: "Python + Nmap tool for OWASP Top 10 scanning with HTML reports",
+    url: "https://github.com/ManoJ-46",
   },
   {
     id: 3,
-    title: "Deagle",
-    desc: "System Scanner for Windows. A tool to scan and detect system information.",
-    url: "https://github.com/jihedkdiss/Deagle/",
+    title: "Telegram Security Monitoring Bot",
+    desc: "Real-time anomaly detection & alerts using Python + Selenium",
+    url: "https://github.com/ManoJ-46",
   },
   {
     id: 4,
-    title: "CTF Challenges & Writeups",
-    desc: "A collection of reverse engineering challenges and solutions.",
-    url: "https://github.com/jihedkdiss/Writeups/",
+    title: "Secure Online Food Order System",
+    desc: "Intern project hardened with rate limiting, session management & SQL protection",
+    url: "https://github.com/ManoJ-46",
   },
 ];
 

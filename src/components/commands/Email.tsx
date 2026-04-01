@@ -6,15 +6,14 @@ import { termContext } from "../Terminal";
 const Email: React.FC = () => {
   const { history, rerender } = useContext(termContext);
 
-  /* ===== get current command ===== */
   const currentCommand = _.split(history[0], " ");
 
-  if (rerender && currentCommand[0] === "email" && currentCommand.length <= 1) {
-    window.open("mailto:" + "contact@jihedkdiss.tn", "_self");
+  if (rerender && currentCommand[0] === "email") {
+    window.open("mailto:dev@maanoj.com", "_self");
   }
 
   const handleEmailClick = () => {
-    window.open("mailto:" + "contact@jihedkdiss.tn", "_self");
+    window.open("mailto:dev@maanoj.com", "_self");
   };
 
   return (
@@ -24,11 +23,13 @@ const Email: React.FC = () => {
         style={{
           cursor: 'pointer',
           textDecoration: 'underline',
-          color: 'inherit'
+          color: '#00ff41'
         }}
       >
-        contact@jihedkdiss.tn
+        dev@maanoj.com
       </span>
+      <br /><br />
+      Click the email above or type <strong>email</strong> to send me a message directly.
     </Wrapper>
   );
 };

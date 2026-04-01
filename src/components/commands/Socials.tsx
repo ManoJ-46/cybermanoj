@@ -13,10 +13,8 @@ import Usage from "../Usage";
 const Socials: React.FC = () => {
   const { arg, history, rerender, executeCommand } = useContext(termContext);
 
-  /* ===== get current command ===== */
   const currentCommand = getCurrentCmdArry(history);
 
-  /* ===== check current command makes redirect ===== */
   useEffect(() => {
     if (checkRedirect(rerender, currentCommand, "socials")) {
       socials.forEach(({ id, url }) => {
@@ -25,12 +23,10 @@ const Socials: React.FC = () => {
     }
   }, [arg, rerender, currentCommand]);
 
-  /* ===== handle social link click ===== */
   const handleSocialClick = (url: string) => {
     window.open(url, "_blank");
   };
 
-  /* ===== check arg is valid ===== */
   const checkArg = () =>
     isArgInvalid(arg, "go", ["1", "2", "3", "4"]) ? (
       <Usage cmd="socials" />
@@ -61,26 +57,26 @@ const Socials: React.FC = () => {
 const socials = [
   {
     id: 1,
-    title: "GitHub",
-    url: "https://github.com/jihedkdiss",
+    title: "LinkedIn",
+    url: "https://linkedin.com/in/maanoj",
     tab: 3,
   },
   {
     id: 2,
-    title: "Facebook",
-    url: "https://www.facebook.com/jiokdiss",
-    tab: 1,
+    title: "GitHub",
+    url: "https://github.com/ManoJ-46",
+    tab: 3,
   },
   {
     id: 3,
-    title: "Linkedin",
-    url: "https://linkedin.com/in/jihedkdiss",
+    title: "X (Twitter)",
+    url: "https://x.com/PsychNanMaga",
     tab: 1,
   },
   {
     id: 4,
-    title: "Blog",
-    url: "https://dev.to/jihedkdiss",
+    title: "Email",
+    url: "mailto:dev@maanoj.com",
     tab: 5,
   },
 ];

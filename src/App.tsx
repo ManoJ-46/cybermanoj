@@ -35,14 +35,14 @@ function App() {
       if (!document.fullscreenElement && el.requestFullscreen) await el.requestFullscreen();
       else if ((el as any).webkitRequestFullscreen) await (el as any).webkitRequestFullscreen();
       else if ((el as any).msRequestFullscreen) await (el as any).msRequestFullscreen();
-    } catch {}
+    } catch { }
   };
   const exitFullscreen = async () => {
     try {
       if (document.exitFullscreen) await document.exitFullscreen();
       else if ((document as any).webkitExitFullscreen) await (document as any).webkitExitFullscreen();
       else if ((document as any).msExitFullscreen) await (document as any).msExitFullscreen();
-    } catch {}
+    } catch { }
   };
   const toggleFullscreen = async () => {
     if (!isFullscreen) await requestFullscreen(); else await exitFullscreen();
@@ -58,7 +58,7 @@ function App() {
       document.removeEventListener('msfullscreenchange', onChange as any);
     };
   }, []);
-  // Auto-enter fullscreen on load (best-effort; some browsers require gesture)
+
   useEffect(() => {
     if (themeLoaded) {
       requestFullscreen();
@@ -74,7 +74,7 @@ function App() {
   const [winW, setWinW] = useState(960);
   const [winH, setWinH] = useState(640);
 
-  // Welcome browser window state (shown on load on desktop only)
+  // Welcome browser window state
   const [welcomeMounted, setWelcomeMounted] = useState(true);
   const [welcomeVisible, setWelcomeVisible] = useState(true);
   const [welcomeMaximized, setWelcomeMaximized] = useState(false);
@@ -84,14 +84,16 @@ function App() {
   const [resumeVisible, setResumeVisible] = useState(false);
   const [resumeMaximized, setResumeMaximized] = useState(false);
 
-  // z-index stacking for windows (desktop): highest index on last focused
+  // z-index stacking
   const [zTop, setZTop] = useState(500);
   const [zBrowser, setZBrowser] = useState(200);
   const [zTerminal, setZTerminal] = useState(300);
   const [zResume, setZResume] = useState(400);
+
   const bringBrowserToFront = () => { const next = zTop + 1; setZTop(next); setZBrowser(next); };
   const bringTerminalToFront = () => { const next = zTop + 1; setZTop(next); setZTerminal(next); };
   const bringResumeToFront = () => { const next = zTop + 1; setZTop(next); setZResume(next); };
+
   const [wbX, setWbX] = useState(140);
   const [wbY, setWbY] = useState(60);
   const [wbW, setWbW] = useState(900);
@@ -101,14 +103,13 @@ function App() {
   const [rsW, setRsW] = useState(900);
   const [rsH, setRsH] = useState(560);
 
-  // Startup layout: mobile => browser only, maximized; desktop => browser only centered
+  // Startup layout
   useEffect(() => {
     if (!themeLoaded) return;
     if (isMobile) {
       setWelcomeMounted(true);
       setWelcomeVisible(true);
-      setWelcomeMaximized(true); // force maximized on mobile
-
+      setWelcomeMaximized(true);
       setTerminalMounted(false);
       setTerminalVisible(false);
       setTerminalMaximized(false);
@@ -116,35 +117,70 @@ function App() {
       setWelcomeMounted(true);
       setWelcomeVisible(true);
       setWelcomeMaximized(false);
-      // Center browser on desktop startup
       const ww = window.innerWidth, wh = window.innerHeight;
       const w = wbW, h = wbH;
       setWbX(Math.max(0, Math.round((ww - w) / 2)));
       setWbY(Math.max(0, Math.round((wh - h) / 2)));
       bringBrowserToFront();
-
       setTerminalMounted(false);
       setTerminalVisible(false);
       setTerminalMaximized(false);
     }
   }, [isMobile, themeLoaded]);
 
-  // Disable browser's default behavior
+  // Disable default arrow keys
   useEffect(() => {
-    window.addEventListener(
-      "keydown",
-      e => {
-        ["ArrowUp", "ArrowDown"].indexOf(e.code) > -1 && e.preventDefault();
-      },
-      false
-    );
+    window.addEventListener("keydown", e => {
+      ["ArrowUp", "ArrowDown"].indexOf(e.code) > -1 && e.preventDefault();
+    }, false);
   }, []);
 
   useEffect(() => {
     setSelectedTheme(theme);
   }, [themeLoaded]);
 
-  // Update meta tag colors when switching themes
+  // MATRIX RAIN + FALLING KALI COMMANDS (added by Grok)
+  useEffect(() => {
+    const canvas = document.getElementById("matrix") as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d")!;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const commands = ["nmap -sV", "msfconsole", "burp", "sudo", "whoami", "hydra", "sqlmap", "nikto", "gobuster", "metasploit", "wireshark", "kali", "root@maanoj", "DoS", "OWASP", "BurpSuite", "ssh", "john"];
+    const fontSize = 14;
+    const columns = width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    const draw = () => {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = "#00ff41";
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = commands[Math.floor(Math.random() * commands.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    };
+
+    const interval = setInterval(draw, 35);
+
+    const resize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener("resize", resize);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  // Update meta theme colors
   useEffect(() => {
     const themeColor = theme.colors?.body;
     const metaThemeColor = document.querySelector("meta[name='theme-color']");
@@ -165,14 +201,12 @@ function App() {
   const handleMinimize = () => { setTerminalVisible(false); setTerminalMaximized(false); };
   const handleOpenFromShortcut = () => {
     if (isMobile) {
-      // Force maximized on mobile
       setTerminalMounted(true);
       setTerminalVisible(true);
       setTerminalMaximized(true);
       bringTerminalToFront();
       return;
     }
-    // center on open (desktop)
     const ww = window.innerWidth, wh = window.innerHeight;
     const w = winW, h = winH;
     setWinX(Math.max(0, Math.round((ww - w) / 2)));
@@ -183,19 +217,17 @@ function App() {
   };
   const handleToggleMaximize = () => { setTerminalMaximized(prev => !prev); setTerminalVisible(true); };
 
-  // Resume window handlers
+  // Resume handlers
   const handleResumeClose = () => { setResumeMounted(false); setResumeVisible(false); setResumeMaximized(false); };
   const handleResumeMinimize = () => { setResumeVisible(false); setResumeMaximized(false); };
   const handleOpenResume = () => {
     if (isMobile) {
-      // Force maximized on mobile
       setResumeMounted(true);
       setResumeVisible(true);
       setResumeMaximized(true);
       bringResumeToFront();
       return;
     }
-    // Center on open (desktop)
     const ww = window.innerWidth, wh = window.innerHeight;
     const w = rsW, h = rsH;
     setRsX(Math.max(0, Math.round((ww - w) / 2)));
@@ -206,19 +238,17 @@ function App() {
   };
   const handleResumeToggleMax = () => { setResumeMaximized(p => !p); setResumeVisible(true); };
 
-  // Welcome window handlers
+  // Welcome handlers
   const handleWelcomeClose = () => { setWelcomeMounted(false); setWelcomeVisible(false); setWelcomeMaximized(false); };
   const handleWelcomeMinimize = () => { setWelcomeVisible(false); setWelcomeMaximized(false); };
   const handleOpenWelcome = () => {
     if (isMobile) {
-      // Force maximized on mobile
       setWelcomeMounted(true);
       setWelcomeVisible(true);
       setWelcomeMaximized(true);
       bringBrowserToFront();
       return;
     }
-    // Center on open (desktop)
     const ww = window.innerWidth, wh = window.innerHeight;
     const w = wbW, h = wbH;
     setWbX(Math.max(0, Math.round((ww - w) / 2)));
@@ -231,12 +261,27 @@ function App() {
 
   return (
     <>
-      <h1 className="sr-only" aria-label="Jihed Kdiss">Jihed Kdiss</h1>
+      <h1 className="sr-only" aria-label="Manoj Kumar N">Manoj Kumar N</h1>
+
+      {/* MATRIX RAIN BACKGROUND - NEON KALI COMMANDS */}
+      <canvas
+        id="matrix"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: -1,
+          opacity: 0.18,
+          pointerEvents: "none",
+        }}
+      />
+
       {themeLoaded && (
         <ThemeProvider theme={selectedTheme}>
           <GlobalStyle />
           <themeContext.Provider value={themeSwitcher}>
-            {/* Desktop Icons - below windows, hidden when any window is maximized */}
             <DesktopShortcuts
               onOpenTerminal={handleOpenFromShortcut}
               onOpenWelcome={handleOpenWelcome}
@@ -248,35 +293,30 @@ function App() {
               mobileExpanded={isMobile && !terminalMounted}
             />
 
-            {/* Fullscreen toggle control: hide when any window maximized; allow windows to overlap due to low z-index */}
             <FullscreenToggle
               isFullscreen={isFullscreen}
               onToggle={toggleFullscreen}
               hidden={terminalMaximized || welcomeMaximized || resumeMaximized}
             />
 
-            {/* Welcome Browser Window opens on start on desktop only */}
             {welcomeMounted && (
               <WelcomeBrowserWindow
                 onClose={handleWelcomeClose}
-                // On mobile: only close button (omit minimize/maximize)
                 onMinimize={!isMobile ? handleWelcomeMinimize : undefined}
                 onToggleMaximize={!isMobile ? handleWelcomeToggleMax : undefined}
                 isMaximized={welcomeMaximized}
                 visible={welcomeVisible}
                 x={wbX} y={wbY} width={wbW} height={wbH}
-                onMove={(x,y) => { setWbX(x); setWbY(y); bringBrowserToFront(); }}
-                onResize={({ width, height, x, y }) => { if (x!==undefined) setWbX(x); if (y!==undefined) setWbY(y); setWbW(width); setWbH(height); bringBrowserToFront(); }}
+                onMove={(x, y) => { setWbX(x); setWbY(y); bringBrowserToFront(); }}
+                onResize={({ width, height, x, y }) => { if (x !== undefined) setWbX(x); if (y !== undefined) setWbY(y); setWbW(width); setWbH(height); bringBrowserToFront(); }}
                 onFocus={bringBrowserToFront}
                 zIndex={zBrowser}
               />
             )}
 
-            {/* Terminal Window */}
             {terminalMounted && (
               <TerminalWindow
                 onClose={handleClose}
-                // On mobile: only close button (omit minimize/maximize)
                 onMinimize={!isMobile ? handleMinimize : undefined}
                 onToggleMaximize={!isMobile ? handleToggleMaximize : undefined}
                 isMaximized={terminalMaximized}
@@ -289,18 +329,16 @@ function App() {
               />
             )}
 
-            {/* Resume Window */}
             {resumeMounted && (
               <ResumeWindow
                 onClose={handleResumeClose}
-                // On mobile: only close button (omit minimize/maximize)
                 onMinimize={!isMobile ? handleResumeMinimize : undefined}
                 onToggleMaximize={!isMobile ? handleResumeToggleMax : undefined}
                 isMaximized={resumeMaximized}
                 visible={resumeVisible}
                 x={rsX} y={rsY} width={rsW} height={rsH}
-                onMove={(x,y) => { setRsX(x); setRsY(y); bringResumeToFront(); }}
-                onResize={({ width, height, x, y }) => { if (x!==undefined) setRsX(x); if (y!==undefined) setRsY(y); setRsW(width); setRsH(height); bringResumeToFront(); }}
+                onMove={(x, y) => { setRsX(x); setRsY(y); bringResumeToFront(); }}
+                onResize={({ width, height, x, y }) => { if (x !== undefined) setRsX(x); if (y !== undefined) setRsY(y); setRsW(width); setRsH(height); bringResumeToFront(); }}
                 onFocus={bringResumeToFront}
                 zIndex={zResume}
               />

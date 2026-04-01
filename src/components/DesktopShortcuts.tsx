@@ -16,7 +16,7 @@ type Props = {
 const Grid = styled.div<{ hidden?: boolean; mobileExpanded?: boolean }>`
   position: fixed;
   display: grid;
-  z-index: 10; /* below windows */
+  z-index: 10;
   ${({ hidden }) => hidden && 'display:none;'}
 
   ${({ mobileExpanded }) => mobileExpanded ? `
@@ -35,19 +35,41 @@ const Grid = styled.div<{ hidden?: boolean; mobileExpanded?: boolean }>`
   `}
 `;
 
-const DesktopShortcuts: React.FC<Props> = ({ onOpenTerminal, onOpenWelcome, onOpenResume, hidden, activeTerminal, activeBrowser, activeResume, mobileExpanded }) => {
+const DesktopShortcuts: React.FC<Props> = ({
+  onOpenTerminal,
+  onOpenWelcome,
+  onOpenResume,
+  hidden,
+  activeTerminal,
+  activeBrowser,
+  activeResume,
+  mobileExpanded
+}) => {
   return (
     <Grid hidden={hidden} mobileExpanded={mobileExpanded}>
       <DesktopShortcut label="Browser" onOpen={onOpenWelcome} icon={Icons.Browser} active={activeBrowser} />
       <DesktopShortcut label="Terminal" onOpen={onOpenTerminal} icon={Icons.Terminal} active={activeTerminal} />
-      <DesktopShortcut label="LinkedIn" href="https://www.linkedin.com/in/jihedkdiss" icon={Icons.LinkedIn} />
-      <DesktopShortcut label="GitHub" href="https://github.com/jihedkdiss" icon={Icons.GitHub} />
-      <DesktopShortcut label="Facebook" href="https://facebook.com/0xjio" icon={Icons.Facebook} />
-      <DesktopShortcut label="Blog" href="https://blog.jihedkdiss.tn/" icon={Icons.Blog} />
+
+      {/* Your real links */}
+      <DesktopShortcut
+        label="LinkedIn"
+        href="https://linkedin.com/in/maanoj"
+        icon={Icons.LinkedIn}
+      />
+      <DesktopShortcut
+        label="GitHub"
+        href="https://github.com/ManoJ-46"
+        icon={Icons.GitHub}
+      />
+      <DesktopShortcut
+        label="X (Twitter)"
+        href="https://x.com/PsychNanMaga"
+        icon={Icons.LinkedIn}   // using LinkedIn icon for now (you can change later)
+      />
+
       <DesktopShortcut label="Resume" onOpen={onOpenResume} icon={Icons.PDF} active={activeResume} />
     </Grid>
   );
 };
 
 export default DesktopShortcuts;
-

@@ -20,6 +20,7 @@ const Help: React.FC = () => {
 
   return (
     <HelpWrapper data-testid="help">
+      <strong>Available Commands:</strong><br /><br />
       {commands.map(({ cmd, desc, tab }) => (
         <CmdList key={cmd}>
           <Cmd onClick={() => handleCommandClick(cmd)} style={{ cursor: 'pointer' }}>

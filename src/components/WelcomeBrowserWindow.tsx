@@ -1,22 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-// Simple browser-like window that is draggable/resizable and shows a welcome message
-
 type Props = {
   onClose: () => void;
   onMinimize?: () => void;
   isMaximized?: boolean;
   onToggleMaximize?: () => void;
   x?: number; y?: number; width?: number; height?: number;
-  onMove?: (x:number, y:number) => void;
-  onResize?: (next: { width:number; height:number; x?:number; y?:number }) => void;
+  onMove?: (x: number, y: number) => void;
+  onResize?: (next: { width: number; height: number; x?: number; y?: number }) => void;
   visible?: boolean;
   onFocus?: () => void;
   zIndex?: number;
 };
 
-const Frame = styled.div<{ x?:number; y?:number; width?:number; height?:number; maximized?: boolean; hidden?: boolean; isTransforming?: boolean; zIndex?: number }>`
+const Frame = styled.div<{ x?: number; y?: number; width?: number; height?: number; maximized?: boolean; hidden?: boolean; isTransforming?: boolean; zIndex?: number }>`
   position: fixed;
   box-sizing: border-box;
   ${({ theme }) => theme.backgroundImage && `
@@ -35,7 +33,7 @@ const Frame = styled.div<{ x?:number; y?:number; width?:number; height?:number; 
   ${({ maximized, x, y, width, height }) => !maximized && css`
     left: ${x ?? 140}px; top: ${y ?? 60}px; width: ${width ?? 900}px; height: ${height ?? 560}px;
   `}
-  z-index: ${({ zIndex }) => zIndex ?? 200}; /* above desktop icons but below modals */
+  z-index: ${({ zIndex }) => zIndex ?? 200};
   transition: ${({ isTransforming }) => isTransforming ? 'left 180ms ease, top 180ms ease, width 180ms ease, height 180ms ease, border-radius 180ms ease' : 'none'};
 `;
 
@@ -59,7 +57,7 @@ const WindowControls = styled.div`
   `}
 `;
 
-const ControlButton = styled.button<{ variant?: 'min'|'max'|'close' }>`
+const ControlButton = styled.button<{ variant?: 'min' | 'max' | 'close' }>`
   ${({ theme, variant }) => theme.backgroundImage && `
     width: 46px; height: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: background 0.15s ease; border: none; background: transparent; color: #d9d9d9;
@@ -92,7 +90,7 @@ const Content = styled.div<{ maximized?: boolean }>`
   overflow:auto;
 `;
 
-const Handle = styled.div<{ pos: 'n'|'s'|'e'|'w'|'ne'|'nw'|'se'|'sw' }>`
+const Handle = styled.div<{ pos: 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw' }>`
   position:absolute; z-index:5;
   ${({ pos }) => pos === 'n' && css`top: -2px; left: 6px; right: 6px; height: 6px; cursor: ns-resize;`}
   ${({ pos }) => pos === 's' && css`bottom: -2px; left: 6px; right: 6px; height: 6px; cursor: ns-resize;`}
@@ -105,9 +103,9 @@ const Handle = styled.div<{ pos: 'n'|'s'|'e'|'w'|'ne'|'nw'|'se'|'sw' }>`
 `;
 
 const MIN_W = 520; const MIN_H = 340;
-const clamp = (v:number, min:number, max:number) => Math.max(min, Math.min(max, v));
+const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
-const WelcomeBrowserWindow: React.FC<Props> = ({ onClose, onMinimize, isMaximized=false, onToggleMaximize, x=140, y=60, width=900, height=560, onMove, onResize, visible=true, onFocus, zIndex }) => {
+const WelcomeBrowserWindow: React.FC<Props> = ({ onClose, onMinimize, isMaximized = false, onToggleMaximize, x = 140, y = 60, width = 900, height = 560, onMove, onResize, visible = true, onFocus, zIndex }) => {
   const posRef = useRef({ x, y });
   const sizeRef = useRef({ width, height });
   useEffect(() => { posRef.current = { x, y }; }, [x, y]);
@@ -199,162 +197,44 @@ const WelcomeBrowserWindow: React.FC<Props> = ({ onClose, onMinimize, isMaximize
       )}
 
       <Toolbar>
-        <LocationBar>https://jihedkdiss.tn</LocationBar>
+        <LocationBar>https://maanoj.com</LocationBar>
       </Toolbar>
 
       <Content maximized={isMaximized}>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '24px',
-          animation: 'fadeInUp 0.8s ease-out'
-        }}>
-          {/* Hero */}
-          <section style={{
-            display: 'grid',
-            gridTemplateColumns: '120px 1fr',
-            gap: '20px',
-            alignItems: 'center'
-          }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Hero Section */}
+          <section style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '20px', alignItems: 'center' }}>
             <img
-              src="/jihedkdiss.jpg"
-              alt="Jihed Kdiss"
-              style={{
-                width: '120px',
-                height: '120px',
-                objectFit: 'cover',
-                borderRadius: '14px',
-                boxShadow: '0 14px 30px rgba(0,0,0,0.35)',
-                border: '1px solid rgba(255,255,255,0.12)'
-              }}
+              src="/og.jpg"
+              alt="Manoj Kumar N"
+              style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '14px', boxShadow: '0 14px 30px rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.12)' }}
             />
             <div>
-              <h1 style={{
-                margin: 0,
-                fontSize: '2.2rem',
-                background: 'linear-gradient(135deg, #88C0D0 0%, #5E81AC 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontWeight: 800,
-                letterSpacing: '-0.02em'
-              }}>Jihed Kdiss</h1>
-              <p style={{
-                margin: '6px 0 0 0',
-                fontSize: '1.05rem',
-                color: '#D8DEE9',
-                opacity: 0.95
-              }}>Security Researcher • Software Engineer</p>
-              <div role="group" aria-label="Quick links" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '12px' }}>
-                <a href="https://github.com/jihedkdiss" target="_blank" rel="noreferrer" style={{
-                  textDecoration: 'none',
-                  color: '#88C0D0',
-                  background: 'rgba(136, 192, 208, 0.15)',
-                  padding: '8px 12px',
-                  borderRadius: '999px',
-                  border: '1px solid rgba(136,192,208,0.35)',
-                  fontSize: '0.92rem'
-                }}>GitHub</a>
-                <a href="https://www.linkedin.com/in/jihedkdiss" target="_blank" rel="noreferrer" style={{
-                  textDecoration: 'none', color: '#A3BE8C', background: 'rgba(163, 190, 140, 0.15)', padding: '8px 12px', borderRadius: '999px', border: '1px solid rgba(163,190,140,0.35)', fontSize: '0.92rem'
-                }}>LinkedIn</a>
-                <a href="https://facebook.com/0xjio" target="_blank" rel="noreferrer" style={{
-                  textDecoration: 'none', color: '#81A1C1', background: 'rgba(129, 161, 193, 0.15)', padding: '8px 12px', borderRadius: '999px', border: '1px solid rgba(129,161,193,0.35)', fontSize: '0.92rem'
-                }}>Facebook</a>
-                <a href="https://blog.jihedkdiss.tn/" target="_blank" rel="noreferrer" style={{
-                  textDecoration: 'none', color: '#B48EAD', background: 'rgba(180, 142, 173, 0.15)', padding: '8px 12px', borderRadius: '999px', border: '1px solid rgba(180,142,173,0.35)', fontSize: '0.92rem'
-                }}>Blog</a>
-                <a href="/Jihed_Kdiss_Resume.pdf" target="_blank" rel="noreferrer" style={{
-                  textDecoration: 'none', color: '#EBCB8B', background: 'rgba(235, 203, 139, 0.15)', padding: '8px 12px', borderRadius: '999px', border: '1px solid rgba(235,203,139,0.35)', fontSize: '0.92rem'
-                }}>Resume</a>
+              <h1 style={{ margin: 0, fontSize: '2.4rem', background: 'linear-gradient(135deg, #00ff41 0%, #00bfff 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 800 }}>
+                Manoj Kumar N
+              </h1>
+              <p style={{ margin: '8px 0 0 0', fontSize: '1.1rem', color: '#00ff41' }}>
+                Cybersecurity Engineer | Ethical Hacker | DoS Research & Penetration Testing
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
+                <a href="https://linkedin.com/in/maanoj" target="_blank" style={{ padding: '8px 16px', background: 'rgba(0,255,65,0.15)', color: '#00ff41', borderRadius: '999px', textDecoration: 'none', border: '1px solid rgba(0,255,65,0.4)' }}>LinkedIn</a>
+                <a href="https://github.com/ManoJ-46" target="_blank" style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.1)', color: '#ECEFF4', borderRadius: '999px', textDecoration: 'none' }}>GitHub</a>
+                <a href="https://x.com/PsychNanMaga" target="_blank" style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.1)', color: '#ECEFF4', borderRadius: '999px', textDecoration: 'none' }}>X</a>
               </div>
             </div>
           </section>
 
-          {/* Highlight cards */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '20px',
-            marginTop: '6px'
-          }}>
-            <div
-              style={{
-                background: 'linear-gradient(135deg, rgba(136, 192, 208, 0.10) 0%, rgba(94, 129, 172, 0.10) 100%)',
-                border: '1px solid rgba(136, 192, 208, 0.25)',
-                borderRadius: '14px',
-                padding: '18px',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                cursor: 'pointer'
-              }}
-              onClick={() => window.open('https://dev.to/jihedkdiss', '_blank')}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 14px 30px rgba(136, 192, 208, 0.18)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '10px' }}>
-                <span style={{ fontSize: '1.5rem' }}>🛡️</span>
-                <h3 style={{ margin: 0, color: '#88C0D0', fontSize: '1.05rem' }}>Security Research</h3>
-              </div>
-              <p style={{ margin: 0, lineHeight: 1.6 as any, color: '#D8DEE9' }}>
-                4+ years reverse engineering & malware analysis. CTF author/instructor at <strong style={{ color: '#A3BE8C' }}>Securinets</strong>.
-              </p>
-            </div>
-
-            <div
-              style={{
-                background: 'linear-gradient(135deg, rgba(163, 190, 140, 0.10) 0%, rgba(191, 97, 106, 0.10) 100%)',
-                border: '1px solid rgba(163, 190, 140, 0.25)',
-                borderRadius: '14px',
-                padding: '18px',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                cursor: 'pointer'
-              }}
-              onClick={() => window.open('https://www.linkedin.com/in/jihedkdiss', '_blank')}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 14px 30px rgba(163, 190, 140, 0.18)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '10px' }}>
-                <span style={{ fontSize: '1.5rem' }}>💼</span>
-                <h3 style={{ margin: 0, color: '#A3BE8C', fontSize: '1.05rem' }}>Professional Experience</h3>
-              </div>
-              <p style={{ margin: 0, lineHeight: 1.6 as any, color: '#D8DEE9' }}>
-                Ex-cybersecurity instructor at <strong style={{ color: '#EBCB8B' }}>Internews</strong>. SysAdmin at <strong style={{ color: '#EBCB8B' }}>Radio Mednine</strong>. Teaching at <strong style={{ color: '#EBCB8B' }}>Blade Club</strong>.
-              </p>
-            </div>
-
-            <div
-              style={{
-                background: 'linear-gradient(135deg, rgba(235, 203, 139, 0.10) 0%, rgba(208, 135, 112, 0.10) 100%)',
-                border: '1px solid rgba(235, 203, 139, 0.25)',
-                borderRadius: '14px',
-                padding: '18px',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                cursor: 'pointer'
-              }}
-              onClick={() => window.open('https://insat.rnu.tn', '_blank')}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 14px 30px rgba(235, 203, 139, 0.18)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '10px' }}>
-                <span style={{ fontSize: '1.5rem' }}>🏫</span>
-                <h3 style={{ margin: 0, color: '#EBCB8B', fontSize: '1.05rem' }}>Education</h3>
-              </div>
-              <p style={{ margin: 0, lineHeight: 1.6 as any, color: '#D8DEE9' }}>
-                Software Engineering at <strong style={{ color: '#D08770' }}>INSAT</strong>: architecture, algorithms, low-level programming.
-              </p>
-            </div>
+          {/* Short Bio */}
+          <div style={{ lineHeight: '1.7', fontSize: '1.05rem', color: '#D8DEE9' }}>
+            Proactive MCA graduate specializing in ethical hacking, network defense, and DoS attack mitigation.
+            Published IEEE research on scalable DoS-resilient wireless systems using Deep Reinforcement Learning.
+            Certified Ethical Hacker with hands-on secure development experience.
+            Passionate about penetration testing, vulnerability assessment, and building resilient digital fortresses.
           </div>
         </div>
-
-        <style>{`
-          @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}</style>
       </Content>
     </Frame>
   );
 };
 
 export default WelcomeBrowserWindow;
-

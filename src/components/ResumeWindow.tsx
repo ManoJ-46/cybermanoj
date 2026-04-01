@@ -1,22 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-// Resume window with integrated PDF viewer
-
 type Props = {
   onClose: () => void;
   onMinimize?: () => void;
   isMaximized?: boolean;
   onToggleMaximize?: () => void;
   x?: number; y?: number; width?: number; height?: number;
-  onMove?: (x:number, y:number) => void;
-  onResize?: (next: { width:number; height:number; x?:number; y?:number }) => void;
+  onMove?: (x: number, y: number) => void;
+  onResize?: (next: { width: number; height: number; x?: number; y?: number }) => void;
   visible?: boolean;
   onFocus?: () => void;
   zIndex?: number;
 };
 
-const Frame = styled.div<{ x?:number; y?:number; width?:number; height?:number; maximized?: boolean; hidden?: boolean; isTransforming?: boolean; zIndex?: number }>`
+const Frame = styled.div<{ x?: number; y?: number; width?: number; height?: number; maximized?: boolean; hidden?: boolean; isTransforming?: boolean; zIndex?: number }>`
   position: fixed;
   box-sizing: border-box;
   ${({ theme }) => theme.backgroundImage && `
@@ -59,7 +57,7 @@ const WindowControls = styled.div`
   `}
 `;
 
-const ControlButton = styled.button<{ variant?: 'min'|'max'|'close' }>`
+const ControlButton = styled.button<{ variant?: 'min' | 'max' | 'close' }>`
   ${({ theme, variant }) => theme.backgroundImage && `
     width: 46px; height: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: background 0.15s ease; border: none; background: transparent; color: #d9d9d9;
@@ -114,8 +112,7 @@ const PDFContainer = styled.div`
   & iframe, & embed { width: 100%; height: 100%; border: 0; }
 `;
 
-// Resize handles
-const Handle = styled.div<{ pos: 'n'|'s'|'e'|'w'|'ne'|'nw'|'se'|'sw' }>`
+const Handle = styled.div<{ pos: 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw' }>`
   position:absolute; z-index:5;
   ${({ pos }) => pos === 'n' && css`top: -2px; left: 6px; right: 6px; height: 6px; cursor: ns-resize;`}
   ${({ pos }) => pos === 's' && css`bottom: -2px; left: 6px; right: 6px; height: 6px; cursor: ns-resize;`}
@@ -128,9 +125,9 @@ const Handle = styled.div<{ pos: 'n'|'s'|'e'|'w'|'ne'|'nw'|'se'|'sw' }>`
 `;
 
 const MIN_W = 520; const MIN_H = 340;
-const clamp = (v:number, min:number, max:number) => Math.max(min, Math.min(max, v));
+const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
-const ResumeWindow: React.FC<Props> = ({ onClose, onMinimize, isMaximized=false, onToggleMaximize, x=160, y=80, width=900, height=560, onMove, onResize, visible=true, onFocus, zIndex }) => {
+const ResumeWindow: React.FC<Props> = ({ onClose, onMinimize, isMaximized = false, onToggleMaximize, x = 160, y = 80, width = 900, height = 560, onMove, onResize, visible = true, onFocus, zIndex }) => {
   const posRef = useRef({ x, y });
   const sizeRef = useRef({ width, height });
   useEffect(() => { posRef.current = { x, y }; }, [x, y]);
@@ -187,7 +184,7 @@ const ResumeWindow: React.FC<Props> = ({ onClose, onMinimize, isMaximized=false,
     window.addEventListener('mouseup', onMouseUp);
   };
 
-  const pdfUrl = "/Jihed_Kdiss_Resume.pdf"; // Ensure this file exists in public root
+  const pdfUrl = "/resume.pdf";
 
   return (
     <Frame x={x} y={y} width={width} height={height} maximized={isMaximized} hidden={!visible} isTransforming={!dragging.current && !resizing.current} zIndex={zIndex}>
@@ -228,8 +225,8 @@ const ResumeWindow: React.FC<Props> = ({ onClose, onMinimize, isMaximized=false,
         <Actions>
           <DownloadLink href={pdfUrl} download>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 21h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M5 21h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
             Download
           </DownloadLink>
@@ -246,4 +243,3 @@ const ResumeWindow: React.FC<Props> = ({ onClose, onMinimize, isMaximized=false,
 };
 
 export default ResumeWindow;
-
